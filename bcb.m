@@ -1,7 +1,7 @@
 qtok = strsplit(q,' ');
 %move to better spot later
 num_col = size(index);
-tol = 1e-5;
+tol = 1e-3;
 %end
 score = zeros(length(doclengths),1);
 for i = 1:length(qtok)
@@ -17,13 +17,16 @@ for i = 1:length(qtok)
     tf = [tf_q doclengths((index(ind(1):ind(2))+1),1)-tf_q];
     error = [10 10];
     prev = [0 0];
+    a = 0.003;
     %gradient descent for B
-    while max(error > tol) && isequal(error,prev)
+    while max(error > tol)
         prev = error;
-        denom = [(psi(sum(tf,2)+sum(B,2)) - psi(sum(B,2))), (psi(sum(tf,2)+sum(B,2)) - psi(sum(B,2)))];
+        %denom = [(psi(sum(tf,2)+sum(B,2)) - psi(sum(B,2))), (psi(sum(tf,2)+sum(B,2)) - psi(sum(B,2)))];
+        gl = psi(sum(B,2))-psi(sum(tf,2)+sum(B,2));
         B_old=B;
-        B = B.*(psi(tf+B)-psi(B))./denom;
-        error = max(B-B_old);
+        B = B + a *([gl gl] + psi(tf+B) - psi(B));
+        %B = B.*(psi(tf+B)-psi(B))./denom;
+        error = max(B-B_old)
     end
     %make sure this is correct in terms of element wise matrix
     score((index(ind(1):ind(2))+1),1) = score((index(ind(1):ind(2))+1),1) + sum((tf-1 .* B + (tf-1).*(tf)./2.),2);
