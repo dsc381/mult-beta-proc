@@ -7,6 +7,9 @@ score = zeros(length(doclengths),1);
 for i = 1:length(qtok)
     %for each word in query
     current = qtok(i);
+    if ~isKey(m,current{1}) %make sure q term is in corpus
+        continue
+    end
     ind = m(current{1});
     %for each doc listed in the index for that word
     tf_q = (sum(index(ind(1):ind(2),:)~=0,2)-1);
@@ -21,12 +24,14 @@ for i = 1:length(qtok)
     %gradient descent for B
     while max(error > tol)
         prev = error;
+        %# old approach using upper bound
         %denom = [(psi(sum(tf,2)+sum(B,2)) - psi(sum(B,2))), (psi(sum(tf,2)+sum(B,2)) - psi(sum(B,2)))];
         gl = psi(sum(B,2))-psi(sum(tf,2)+sum(B,2));
         B_old=B;
         B = B + a *([gl gl] + psi(tf+B) - psi(B));
+        %# old approach using upper bound
         %B = B.*(psi(tf+B)-psi(B))./denom;
-        error = max(B-B_old)
+        error = max(B-B_old);
     end
     %make sure this is correct in terms of element wise matrix
     score((index(ind(1):ind(2))+1),1) = score((index(ind(1):ind(2))+1),1) + sum((tf-1 .* B + (tf-1).*(tf)./2.),2);
