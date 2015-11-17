@@ -8,7 +8,7 @@ process = psutil.Process(os.getpid())
 mem = psutil.virtual_memory()
 ram = mem.total  # total physical memory available
 GB = 2**30
-cutoff = (ram*.001)/GB
+cutoff = (ram*.6)/GB
 print cutoff
 f = open(sys.argv[1],'r')
 q = open('postings_m','w')
@@ -16,10 +16,13 @@ converted = []
 row = 0
 for line in f:
     row += 1
-    if (row%1000 == 0 and process.memory_info().rss/(2**20) > cutoff):
+    if (row%1000 == 0 and process.memory_info().rss/(2**30) > cutoff):
         print "clearing ram"
+	print process.memory_info().rss/(2**30)
         q.write(''.join(converted))
         converted = []
+	print "cleared"
+	print process.memory_info().rss/(2**30)
     line = line[:-1].split(',')
     col = 0
     for entry in line[1:]:
