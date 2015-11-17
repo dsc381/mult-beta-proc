@@ -1,4 +1,5 @@
 qtok = strsplit(q,' ');
+scores = zeros(length(doclengths),1);
 %move to better spot later
 num_col = size(index);
 tol = 1e-3;

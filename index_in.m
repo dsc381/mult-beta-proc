@@ -1,5 +1,4 @@
 doclengths = csvread('lengths',0,1);
-scores = zeros(length(doclengths));
 index = csvread('postings',0,1);
 index = sparse(index);
 names = read_mixed_csv('names',',');
