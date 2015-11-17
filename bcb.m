@@ -14,7 +14,8 @@ for i = 1:length(qtok)
     %for each doc listed in the index for that word
     tf_q = (sum(index(ind(1):ind(2),:)~=0,2)-1);
     %remove CS indexing that starts at 0
-    tf_q(tf_q==0) = 1;
+    tf_q(tf_q<=0) = 1;
+    %I suck at matlab and can't do this cleaner
     B =ones(ind(2)-ind(1)+1,2)*.5;
     %implement counts with doc # = indices, val = number of terms
     tf = [tf_q doclengths((index(ind(1):ind(2))+1),1)-tf_q];
