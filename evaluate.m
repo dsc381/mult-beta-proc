@@ -1,4 +1,4 @@
-queries = read_mixed_csv('test.csv',',',(1));
+queries = read_mixed_csv('rob04.titles.tsv',',',(1));
 r_size = size(queries);
 results = zeros(r_size(1),40);
 for k = 1:r_size(1)
