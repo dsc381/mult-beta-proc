@@ -1,7 +1,14 @@
 doclengths = csvread('lengths',0,1);
 disp('finished reading in doclength')
 load postings_m;
-index = spconvert(postings_m);
+index = sparse(583195,3);
+for i= 1:size(postings_m)
+    index(postings_m(i,1),postings_m(i,2)) = postings_m(i,3);
+    if mod(i,1000) == 0
+        disp(i)
+    end
+end
+    
 disp('finished reading in index')
 disp('now sparse index')
 names = read_mixed_csv('names',',',[]);
