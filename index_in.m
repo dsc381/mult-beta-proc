@@ -1,8 +1,12 @@
 doclengths = csvread('lengths',0,1);
+disp('finished reading in doclength')
 index = csvread('postings',0,1);
+disp('finished reading in index')
 index = sparse(index);
+disp('now sparse index')
 names = read_mixed_csv('names',',');
 names = names(:,2);
+disp('finished reading in names')
 
 % while ischar(textLine)
 % 	% get into numbers array.

@@ -22,6 +22,6 @@ function lineArray = read_mixed_csv(fileName,delimiter,conv)
   end
   for i=1:length(conv)          %# Convert given columns to floats
       k = length(i);
-    lineArray(:,k) = cellfun(@(s) {str2double(s)},lineArray(:,k)); %#ok<NODEF>
+    lineArray(:,k) = cellfun(@(s) {str2double(s)},lineArray(:,k)); 
   end
 end
