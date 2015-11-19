@@ -2,6 +2,7 @@ queries = read_mixed_csv('rob04.titles.tsv_m',',',(1));
 r_size = size(queries);
 results = zeros(r_size(1),40);
 for k = 1:r_size(1)
+    disp(k)
     %at the present moment, only use title queries
     q = queries{k,2};
     bcb;

@@ -1,17 +1,7 @@
 doclengths = csvread('lengths',0,1);
 disp('finished reading in doclength')
-fid = fopen('postings_m','r');
-index = spconvert(fscanf(fid,'%d %d %d',[3 Inf]).');
-%index = sparse(max(A(:,1)),max(A(:,2)));
-%for i= 1:size(postings_m)
-%    index(A(i,1),A(i,2)) = A(i,3);
-%    if mod(i,10000) == 0
-%        disp(i)
-%    end
-%end
-    
+index = uint32(load ('postings_m'));
 disp('finished reading in index')
-disp('now sparse index')
 names = read_mixed_csv('names',',',[]);
 names = names(:,2);
 disp('finished reading in names')
