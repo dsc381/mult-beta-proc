@@ -14,4 +14,5 @@ with open('matlab_output.csv') as f:
         k = 40.
         for i,r in enumerate(line[1:]):
             trec_results.append(' '.join([q,num_name[int(r)],'1',str(k-i),'bp']))
-print '\n'.join(trec_results)
+q = open('m_results.eval','w')
+q.write('\n'.join(trec_results))
