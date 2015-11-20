@@ -17,8 +17,7 @@ for i = 1:length(qtok)
     tf_q(tf_q<=0) = 1;
     B =ones(ind(2)-ind(1)+1,2)*.5;
     %implement counts with doc # = indices, val = number of terms
-    tf = [tf_q doclengths(index(ind(1)+1:ind(2)+1).',2)-tf_q];
-
+    tf = [tf_q doclengths(index(ind(1):ind(2),1)+1,1)-tf_q];
     error = [10 10];
     prev = [0 0];
     a = 0.003;
@@ -35,7 +34,7 @@ for i = 1:length(qtok)
         error = max(B-B_old);
     end
     %make sure this is correct in terms of element wise matrix
-    score((index(ind(1)+1:ind(2)+1,1)),1) = score((index(ind(1)+1:ind(2)+1)),1) + sum((tf-1 .* B + (tf-1).*(tf)./2.),2);
+    score((index(ind(1):ind(2),1)+1),1) = score(index(ind(1):ind(2),1)+1,1) + sum((tf-1 .* B + (tf-1).*(tf)./2.),2);
 end
     
    

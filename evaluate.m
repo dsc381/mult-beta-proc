@@ -8,7 +8,7 @@ for k = 1:r_size(1)
     bcb;
     s_pos = length(find(score>0));
     [sorted, s_ind] = sort(score,'descend');
-    results(k,1:min(s_pos,40)) = s_ind(1:min(s_pos,40)).';
+    results(k,1:min(s_pos,40)) = s_ind(1:min(s_pos,40)).'-1;
 end
 output = [cell2mat(queries(:,1)), results];
 dlmwrite('matlab_output.csv',output);

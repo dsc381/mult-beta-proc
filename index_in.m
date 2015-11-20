@@ -1,4 +1,4 @@
-doclengths = csvread('lengths',0);
+doclengths = csvread('lengths',0,1);
 disp('finished reading in doclength')
 index = spconvert((load ('postings_m')));
 disp('finished reading in index')
