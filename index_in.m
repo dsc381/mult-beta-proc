@@ -1,6 +1,6 @@
-doclengths = csvread('lengths',0,1);
+doclengths = csvread('lengths',0);
 disp('finished reading in doclength')
-index = uint32(load ('postings_m'));
+index = spconvert((load ('postings_m')));
 disp('finished reading in index')
 names = read_mixed_csv('names',',',[]);
 names = names(:,2);
