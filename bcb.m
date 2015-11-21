@@ -13,11 +13,12 @@ for i = 1:length(qtok)
     end
     ind = m(current{1});
     %for each doc listed in the index for that word
-    tf_q = (sum(index(ind(1):ind(2),:)~=0,2)-1);    %remove CS indexing that starts at 0
+    tf_q = inds(index,ind,'tf')-1;
+    %remove CS indexing that starts at 0
     tf_q(tf_q<=0) = 1;
     B =ones(ind(2)-ind(1)+1,2)*.5;
     %implement counts with doc # = indices, val = number of terms
-    tf = [tf_q doclengths(index(ind(1):ind(2),1)+1,1)-tf_q];
+    tf = [tf_q doclengths(inds(index,ind,'doc'))-tf_q];
     error = [10 10];
     prev = [0 0];
     a = 0.003;
@@ -34,7 +35,7 @@ for i = 1:length(qtok)
         error = max(B-B_old);
     end
     %make sure this is correct in terms of element wise matrix
-    score((index(ind(1):ind(2),1)+1),1) = score(index(ind(1):ind(2),1)+1,1) + sum((tf-1 .* B + (tf-1).*(tf)./2.),2);
+    score(inds(index,ind,'doc')) = score(inds(index,ind,'doc')) + sum((tf-1 .* B + (tf-1).*(tf)./2.),2);
 end
     
    
