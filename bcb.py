@@ -136,7 +136,7 @@ def bcb(qtok,index,doclengths,m):
             B = B + a *(np.array([gl,gl]).T + psi(tf+B) - psi(B))
             error = np.max(B-B_old)
         result = summation(B[:,0],tf[:,0])+ summation(B[:,1],tf[:,1]) - summation(np.sum(B,1),doclengths[used_docs].T[0])
-        score[used_docs.T] = score[used_docs.T] + np.sum((tf-1 * B + (tf-1)*(tf)/2.),axis=1)
+        score[used_docs.T] = score[used_docs.T] + result
         print ".",
     n = 40
     print ''
