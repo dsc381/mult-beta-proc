@@ -105,8 +105,9 @@ def bcb(qtok,index,doclengths,m):
     def summation(params,d,start=0):
         cum_sum = np.zeros(np.shape(params))
         i = start
-        while i < np.max(stop):
-            cum_sum[(d-1)<=i] = cum_sum[(d-1)<=i] + np.log(params[(d-1)<=i] + i)
+        while i < np.max(d):
+            cum_sum[i<=(d-1)] = cum_sum[i<=(d-1)] + np.log(params[i<=(d-1)] + i)
+            i+=1
         return cum_sum
         
 
@@ -134,7 +135,7 @@ def bcb(qtok,index,doclengths,m):
             B_old = B
             B = B + a *(np.array([gl,gl]).T + psi(tf+B) - psi(B))
             error = np.max(B-B_old)
-        result = summation(B[:,0],tf[:,0])+ summation(B[:,1],tf[:,1]) - summation(np.sum(B,1),doclengths[used_docs])
+        result = summation(B[:,0],tf[:,0])+ summation(B[:,1],tf[:,1]) - summation(np.sum(B,1),doclengths[used_docs].T[0])
         score[used_docs.T] = score[used_docs.T] + np.sum((tf-1 * B + (tf-1)*(tf)/2.),axis=1)
         print ".",
     n = 40

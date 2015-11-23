@@ -1,17 +1,17 @@
-qtok = strsplit(q,' ');
+qtok = 'when';
 scores = zeros(length(doclengths),1);
 %move to better spot later
 num_col = size(index);
 tol = 1e-3;
 %end
 score = zeros(length(doclengths),1);
-for i = 1:length(qtok)
+for i = 1:1
     %for each word in query
-    current = qtok(i);
-    if ~isKey(m,current{1}) %make sure q term is in corpus
+    current = 'when';
+    if ~isKey(m,'when') %make sure q term is in corpus
         continue
     end
-    ind = m(current{1});
+    ind = m('when');
     %for each doc listed in the index for that word
     tf_q = inds(index,ind,'tf')-1;
     %remove CS indexing that starts at 0
