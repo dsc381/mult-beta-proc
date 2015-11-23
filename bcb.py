@@ -131,7 +131,9 @@ def bcb(qtok,index,doclengths,m):
     final = score.argsort()[::-1][:n]
     for i,idx in enumerate(final):
         if score[idx] == 0:
-            return final[:i]
+            if score[idx] == 0:
+                final[i] = -1
+    return final
 
 
 def evaluate(fil_name):
@@ -151,6 +153,4 @@ def evaluate(fil_name):
 
 
 if __name__ == '__main__':
-    m = mapping()
-    index,doclengths = index_in()
     evaluate('rob04.titles.tsv')
