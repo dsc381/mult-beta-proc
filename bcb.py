@@ -46,8 +46,8 @@ def index_in():
 
     return index
 
-def map():
-    find_id = -1
+def mapping():
+    fin_id = -1
     idd=0
     m = {}
     with open('postings') as f:
@@ -68,6 +68,7 @@ def map():
             line1 = line2
             line2 = f.readline()
         m[word1] = [start,fin_id+1]
+    return m
 
 def bcb(q):
     qtok = q.split()
@@ -104,3 +105,5 @@ def evaluate(fil_name):
     np.savetxt('python_results',results) 
 
 
+if __name__ == '__main__':
+    m = mapping()
