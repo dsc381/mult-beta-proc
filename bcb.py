@@ -102,12 +102,21 @@ def mapping():
     return m
 
 def bcb(qtok,index,doclengths,m):
+    def summation(params,d,start=0):
+        cum_sum = np.zeros(np.shape(params))
+        i = start
+        while i < np.max(stop):
+            cum_sum[(d-1)<=i] = cum_sum[(d-1)<=i] + np.log(params[(d-1)<=i] + i)
+        return cum_sum
+        
+
     """takes in q,index,doclength,m and outputs top scoring documents"""
     x = np.shape(doclengths)[0]
     score = np.zeros((x))
     for q in qtok:
-        print q,
+        print q+' .',
         if q not in m:
+            print 'X'
             continue
         ind = m[q]
         #map whatever matrix to sparse namespace
@@ -125,21 +134,22 @@ def bcb(qtok,index,doclengths,m):
             B_old = B
             B = B + a *(np.array([gl,gl]).T + psi(tf+B) - psi(B))
             error = np.max(B-B_old)
+        result = summation(B[:,0],tf[:,0])+ summation(B[:,1],tf[:,1]) - summation(np.sum(B,1),doclengths[used_docs])
         score[used_docs.T] = score[used_docs.T] + np.sum((tf-1 * B + (tf-1)*(tf)/2.),axis=1)
+        print ".",
     n = 40
     print ''
     final = score.argsort()[::-1][:n]
     for i,idx in enumerate(final):
         if score[idx] == 0:
-            if score[idx] == 0:
-                final[i] = -1
+            final[i] = -1
     return final
 
 
 def evaluate(fil_name):
+    f = open(fil_name,'r')
     index,doclengths = index_in()
     m = mapping()
-    f = open(fil_name,'r')
     queries = f.readlines()
     results = np.zeros([len(queries),41])
     run = 0
@@ -153,4 +163,4 @@ def evaluate(fil_name):
 
 
 if __name__ == '__main__':
-    evaluate('rob04.titles.tsv')
+    evaluate('./porter_q/rob04.titles.tsv')
