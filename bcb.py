@@ -38,13 +38,13 @@ def index_in():
     index = sparse.csc_matrix((index[:,2], (index[:,0]-1,index[:,1]-1)) ,dtype=np.uint32)
     print ('finished sparse')
     data = np.loadtxt('lengths',delimiter = ',',usecols=(1,))
-    doclengths = np.shape(np.reshape(data,[len(data),1]))
+    doclengths = np.reshape(data,[len(data),1])
     print("finished reading lengths")
     #build map with key -> begin,end
 
 
 
-    return index
+    return index,data
 
 def mapping():
     fin_id = -1
@@ -55,7 +55,7 @@ def mapping():
         line2 = f.readline()
         while(line1):
             word1 = line1.split(',')[0]
-            word2 = line2.split(',')[1]
+            word2 = line2.split(',')[0]
             fin_id = fin_id+1
             start = idd;
             if word1 == word2:
@@ -70,40 +70,50 @@ def mapping():
         m[word1] = [start,fin_id+1]
     return m
 
-def bcb(q):
-    qtok = q.split()
-    score = np.zeros(length(doclengths),1)
+def bcb(qtok,index,doclengths,m):
+    """takes in q,index,doclength,m and outputs top scoring documents"""
+    x = np.shape(doclengths)[0]
+    score = np.zeros((x))
     for q in qtok:
+        print q,
         if q not in m:
             continue
-        ind = m(q)
+        ind = m[q]
         #map whatever matrix to sparse namespace
         #use columns, now sure yet
-        tf_q = sparse.nnz(index[ind(1):ind(2),:])-1
+        tf_q = np.reshape(index[ind[0]:ind[1]+1,:].getnnz(1)-1,[ind[1]-ind[0]+1,1])
         tf_q[tf_q<=0] = 1
-        B = ones(ind[2]-ind[1]+1,2)*.5
-        tf = np.append(tf_q,doclengths[(index[ind(1):ind(2)]+1)],axis=1)
+        B = np.ones((ind[1]-ind[0]+1,2))*.5
+        used_docs = index[ind[0]:ind[1]+1,0].todense()
+        tf = np.append(tf_q,doclengths[used_docs]-tf_q,axis=1)
         error = np.array([[10,10]])
         a = 0.003
+        tol = 0.001
         while np.any(error > tol):
-            gl = psi(np.sum(B,2))-psi(np.sum(tf,2)+np.sum(B,2))
+            gl = psi(np.sum(B,1))-psi(np.sum(tf,1)+np.sum(B,1))
             B_old = B
-            B = B + a *(np.append(gl,gl,axis=1) + psi(tf+B) - psi(B))
-            error = np.max(B-B_old,axis=0)
-        score[doclengths[(index[ind(1):ind(2)]+1)]] = score[doclengths[(index[ind(1):ind(2)]+1)]] + np.sum((tf-1 * B + (tf-1)*(tf)))
-    return np.argsort(score)[:40]
+            B = B + a *(np.array([gl,gl]).T + psi(tf+B) - psi(B))
+            error = np.max(B-B_old)
+        score[used_docs.T] = score[used_docs.T] + np.sum((tf-1 * B + (tf-1)*(tf)/2.),axis=1)
+    n = 40
+    print ''
+    return score.argsort()[::-1][:n]
 
 def evaluate(fil_name):
     f = open(fil_name,'r')
     queries = f.readlines()
-    results = np.zeros([len(queries),40])
+    results = np.zeros([len(queries),41])
     run = 0
     for q in queries:
-        print q
-        results[run]=bcb(q.split()[1:])
+        q = q.split()
+        print run,
+        results[run,0] = q[0]
+        results[run,1:]=bcb(q[1:],index,doclengths,m)
         run +=1
     np.savetxt('python_results',results) 
 
 
 if __name__ == '__main__':
     m = mapping()
+    index,doclengths = index_in()
+    evaluate('rob04.titles.tsv')
